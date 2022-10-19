@@ -5,28 +5,30 @@ let afficherProduits = async function () {
     .then ((data) => {
         let product = data;
         
-        /*
-        console.log(product); //vérification console de ce qui est renvoyé
-        console.log(product[3].name); //vérification de l'item 3
-        */
-
+        console.log('%c Info Produit', 'color: lime; font-weight: bold');
+        console.table(product); //vérification console de ce qui est renvoyé
+        //console.log(product[3].name); //vérification de l'item 3
+        
         let ancreProduits = document.querySelector('#items'); //selection de l'id où insérer le catalogue
         
+        console.log('%c Chargement', 'color: lime; font-weight: bold');
         for (i=0; i < product.length; i++) {
             //Affichage des produits dans le DOM
-                    const ficheProduit = '<a href="./product.html?id='
-                            + product[i]._id 
-                            + '"><article><img src="'
-                            + product[i].imageUrl
-                            + '" alt="' 
-                            + product[i].altTxt
-                            +'" /><h3 class="productName">'
-                            + product[i].name + '</h3><p class="productDescription">'
-                            + product[i].description
-                            + '</p></article></a>';
-                    ancreProduits.innerHTML += ficheProduit;
+            const ficheProduit = '<a href="./product.html?id='
+                + product[i]._id 
+                + '"><article><img src="'
+                + product[i].imageUrl
+                + '" alt="' 
+                + product[i].altTxt
+                +'" /><h3 class="productName">'
+                + product[i].name + '</h3><p class="productDescription">'
+                + product[i].description
+                + '</p></article></a>';
+            let print = [i + 1] + '/' + product.length;
+            console.log(print);
+            ancreProduits.innerHTML += ficheProduit;
                 }
             });
         };
         
-        afficherProduits();
+afficherProduits();
