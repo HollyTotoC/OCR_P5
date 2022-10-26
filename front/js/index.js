@@ -2,17 +2,16 @@
 let afficherProduits = async function () {
     await fetch('http://localhost:3000/api/products')
     .then(res => res.json())
-    .then ((data) => {
-        let product = data;
+    .then ((product) => {
         
-        console.log('%c Info Produit', 'color: lime; font-weight: bold');
-        console.table(product); //vérification console de ce qui est renvoyé
-        //console.log(product[3].name); //vérification de l'item 3
+                                                                            //console.log('%c Info Produit', 'color: lime; font-weight: bold');
+                                                                            //console.table(product); //vérification console de ce qui est renvoyé
+                                                                            //console.log(product[3].name); //vérification de l'item 3
         
-        let ancreProduits = document.querySelector('#items'); //selection de l'id où insérer le catalogue
+        let ancreProduits = document.querySelector('#items');               //selection de l'id où insérer le catalogue
         
-        console.log('%c Chargement', 'color: lime; font-weight: bold');
-        for (i=0; i < product.length; i++) {
+                                                                            //console.log('%c Chargement', 'color: lime; font-weight: bold');
+        for (let i = 0; i < product.length; i++) {
             //Affichage des produits dans le DOM
             const ficheProduit = '<a href="./product.html?id='
                 + product[i]._id 
@@ -25,7 +24,6 @@ let afficherProduits = async function () {
                 + product[i].description
                 + '</p></article></a>';
             let print = [i + 1] + '/' + product.length;
-            console.log(print);
             ancreProduits.innerHTML += ficheProduit;
                 }
             });

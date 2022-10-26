@@ -92,47 +92,141 @@ let formulaire = document.querySelector('.cart__order__form');
 let submit = document.querySelector('#order');
 let firstName = document.querySelector('#firstName');
 let lastName = document.querySelector('#lastName')
-let adress = document.querySelector('#adress');
+let address = document.querySelector('#address');
 let city = document.querySelector('#city');
 let email = document.querySelector('#email');
+
+let emailExeption = /^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$/;
+let nameExeption = /^[a-zA-Zéêëèîïâäçù ,'-]{3,20}$/;
+let addressExeption = /^[0-9]{1,3}[a-zA-Zéêëèîïâäçù ,'-]+$/;
+
+//Verification Prénom
+let verifFirstName = () => {
+    let RegFirstName = nameExeption.test(firstName.value);
+    if (RegFirstName == false) {
+        firstName.nextElementSibling.innerHTML = `Ne peut contenir de chiffres ou caractères spéciaux`;
+        return false;
+    } else {
+        firstName.nextElementSibling.innerHTML = "";
+        return true;
+    }
+}
+firstName.addEventListener('input', () => {
+    verifFirstName(firstName);
+})
+
+//Vérification Nom
+let verifLastName = () => {
+    let RegLastName = nameExeption.test(lastName.value);
+    if (RegLastName == false) {
+        lastName.nextElementSibling.innerHTML = `Ne peut contenir de chiffres ou caractères spéciaux`;
+        return false;
+    } else {
+        lastName.nextElementSibling.innerHTML = "";
+        return true;
+    }
+}
+lastName.addEventListener('input', () => {
+    verifLastName(lastName);
+})
+
+//Vérification Adresse
+let verifAddress = () => {
+    let RegAddress = addressExeption.test(address.value);
+    if (RegAddress == false) {
+        address.nextElementSibling.innerHTML = `Ne peut contenir de chiffres ou caractères spéciaux`;
+        return false;
+    } else {
+        address.nextElementSibling.innerHTML = "";
+        return true;
+    }
+}
+address.addEventListener('input', () => {
+    verifAddress(address);
+})
+
+//Vérification Ville
+let verifCity = () => {
+    let RegCity = nameExeption.test(city.value);
+    if (RegCity == false) {
+        city.nextElementSibling.innerHTML = `Ne peut contenir de chiffres ou caractères spéciaux`;
+        return false;
+    } else {
+        city.nextElementSibling.innerHTML = "";
+        return true;
+    }
+}
+city.addEventListener('input', () => {
+    verifCity(city);
+})
+
+//Vérification Nom
+let verifEmail = () => {
+    let RegEmail = emailExeption.test(email.value);
+    if (RegEmail == false && email.value !='') {
+        email.nextElementSibling.innerHTML = `Ne peut contenir de chiffres ou caractères spéciaux`;
+        return false;
+    } else {
+        email.nextElementSibling.innerHTML = "";
+        return true;
+    }
+}
+email.addEventListener('input', () => {
+    verifEmail(email);
+})
+
+
 
 
 order.addEventListener('click', (event) => {
     event.preventDefault();
     //Si tout ok
+    if (verifFirstName(firstName) && verifLastName(lastName) && verifAddress(address) && verifCity(city) && verifEmail(email)) {
+        let idArray = [];
+        //on définit l'objet commande
+        let order = {
+            contact: {
+                firstName: firstName.value,
+                lastName: lastName.value,
+                address: address.value,
+                city: city.value,
+                email: email.value,
+            },
+            products: idArray,
+        };
+        console.log(order);
 
-    //on récupère les ID en array
-    let products = () => {
-        let productsArray = [];
-        for (let i = 0; i < panier.length; i++) {
-            idProduit = panier[i].productID;
-            productsArray.push(idProduit); 
+        //on récupère les ID en array
+        let products = () => {
+            let productsArray = [];
+            for (let i = 0; i < panier.length; i++) {
+                if (idArray.find((e) => e == panier[i].productId)) {
+                    console.log('erreur')
+                } else {
+                    idArray.push(panier[i].productId);
+                }
+            }; 
+            jsonOrder = JSON.stringify(order);
+            return jsonOrder;
         }
-        return productsArray;
-    }
+        let makeOrder = products();
+        console.log(makeOrder);
 
-    console.log('Array fonction OK');
-
-    //on définit l'objet commande
-    let order = {
-        contact: {
-            firstName: firstName.value,
-            lastName: lastName.value,
-            address: address.value,
-            city: city.value,
-            email:email.value,
-        },
-        products: products(),
-    };
-
-    //on gere l'envoi requete creation + envoi
-/*
-    let requete = {
-        method: "POST",
-        body: JSON.stringify(order),
-        headers: { "Content-Type": "application/json" },
-    };
-*/    
+        fetch ('http://localhost:3000/api/products/order', {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: makeOrder,
+        })
+        .then((response) => response.json())
+        .then((produit) => {
+                localStorage.clear();
+                let orderId = produit.orderId;
+                window.location.assign(`confirmation.html?orderId=${orderId}`);
+        })
+        .catch((error) => {
+            alert("Une erreur est survenue, merci de revenir plus tard.");
+        })
+    } else          alert('Attention, vous avez du commettre une erreur dans le formulaire de contact ;)')
 });
 
 
