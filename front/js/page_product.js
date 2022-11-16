@@ -42,8 +42,12 @@ let afficherProduit = () => {
 let boutonPanier = document.querySelector('#addToCart');
 boutonPanier.addEventListener('click', (event) => {
     let color = document.querySelector("#colors").value;
+    let value = document.querySelector("#quantity").value;
     if (color == "") {
         alert("Veuillez choisir une couleur afin de pouvoir valider votre panier.");
+        event.preventDefault();
+    } else if (value < 1 || value > 100 ) {
+        alert("Veuillez choisir une quantitée valide");
         event.preventDefault();
     } else {
         
