@@ -11,17 +11,19 @@ let afficherPanier = () => {
         for (let i = 0; i < panier.length; i++) {
             document.querySelector('#cart__items').innerHTML += '<article class="cart__item" data-id="'
                 + panier[i].idProduct
-                + '"><div class="cart__item__img"> <img src="'
+                + '" data-color="' 
+                + panier[i].color
+                +'"><div class="cart__item__img"> <img src="'
                 + panier[i].imageUrl
                 + '" alt="'
                 + panier[i].description
-                + '" /></div><div class="cart__item__content"><div class="cart__item__content__titlePrice"><h2>'
+                + '"></div><div class="cart__item__content"><div class="cart__item__content__description"><h2>'
                 + panier[i].name
                 + '</h2><p>'
-                + panier[i].price
-                + '</p><p>Couleur: '
                 + panier[i].color
-                + '</p></div><div class="cart__item__content__settings"><div class="cart__item__content__settings__quantity"><p>Qté :</p><input index="'
+                + '</p><p>'
+                + panier[i].price
+                + ',00 €</p></div><div class="cart__item__content__settings"><div class="cart__item__content__settings__quantity"><p>Qté :</p><input index="'
                 + [i]
                 + '" onchange="recupererQuantity(this)" id="cartQty" type="number" class="itemQuantity" name="itemQuantity" min="0" max="100" value="'
                 + panier[i].valeurQuantity
@@ -71,16 +73,26 @@ let supprimerArticle = (i) => {
 
 //Fonction pour récupérer les MaJ de quantitée 
 let recupererQuantity = (i) => {
-    let index = i.getAttribute('index');
+    let Index = i.getAttribute('index');
     let nouvelleQuantity = i.value;
-    panier[index].valeurQuantity = nouvelleQuantity;
-    console.log('%c Quantité mise a jour', 'color: lime' )
+    panier[Index].valeurQuantity = nouvelleQuantity;
+                                                                //console.log('%c Quantité mise a jour', 'color: lime' )
     
     //cas 0
     if (nouvelleQuantity == 0) {
         supprimerArticle(i);
     } 
-    //cas valeur ppositive
+    else if (nouvelleQuantity < 0) {
+        alert("Veuillez choisir une quantitée valide");
+        //document.querySelectorAll('input[index="'+Index+'"]').value = '"'+panier[Index].valeurQuantity+'"';
+        location.reload();
+    }
+    else if (nouvelleQuantity > 100) {
+        alert("Veuillez choisir une quantitée valide");
+        //document.querySelectorAll('input[index="'+Index+'"]').value = '"'+panier[Index].valeurQuantity+'"';
+        location.reload();
+    }
+    //cas valeur positive
     else {
         total();
         localStorage.setItem('produit', JSON.stringify(panier));
@@ -104,7 +116,7 @@ let addressExeption = /^[0-9]{1,3}[a-zA-Zéêëèîïâäçù ,'-]+$/;
 let verifFirstName = () => {
     let RegFirstName = nameExeption.test(firstName.value);
     if (RegFirstName == false) {
-        firstName.nextElementSibling.innerHTML = `Ne peut contenir de chiffres ou caractères spéciaux`;
+        firstName.nextElementSibling.innerHTML = `Ne peut contenir de chiffres ou caractères spéciaux.`;
         return false;
     } else {
         firstName.nextElementSibling.innerHTML = "";
@@ -119,7 +131,7 @@ firstName.addEventListener('input', () => {
 let verifLastName = () => {
     let RegLastName = nameExeption.test(lastName.value);
     if (RegLastName == false) {
-        lastName.nextElementSibling.innerHTML = `Ne peut contenir de chiffres ou caractères spéciaux`;
+        lastName.nextElementSibling.innerHTML = `Ne peut contenir de chiffres ou caractères spéciaux.`;
         return false;
     } else {
         lastName.nextElementSibling.innerHTML = "";
@@ -134,7 +146,7 @@ lastName.addEventListener('input', () => {
 let verifAddress = () => {
     let RegAddress = addressExeption.test(address.value);
     if (RegAddress == false) {
-        address.nextElementSibling.innerHTML = `Ne peut contenir de chiffres ou caractères spéciaux`;
+        address.nextElementSibling.innerHTML = `Veuillez saisir une adresse complète. Ne peut contenir de chiffres ou caractères spéciaux.`;
         return false;
     } else {
         address.nextElementSibling.innerHTML = "";
@@ -149,7 +161,7 @@ address.addEventListener('input', () => {
 let verifCity = () => {
     let RegCity = nameExeption.test(city.value);
     if (RegCity == false) {
-        city.nextElementSibling.innerHTML = `Ne peut contenir de chiffres ou caractères spéciaux`;
+        city.nextElementSibling.innerHTML = `Ne peut contenir de chiffres ou caractères spéciaux.`;
         return false;
     } else {
         city.nextElementSibling.innerHTML = "";
@@ -164,7 +176,7 @@ city.addEventListener('input', () => {
 let verifEmail = () => {
     let RegEmail = emailExeption.test(email.value);
     if (RegEmail == false && email.value !='') {
-        email.nextElementSibling.innerHTML = `Ne peut contenir de chiffres ou caractères spéciaux`;
+        email.nextElementSibling.innerHTML = `Email invalide. Ne peut contenir de chiffres ou caractères spéciaux.`;
         return false;
     } else {
         email.nextElementSibling.innerHTML = "";
@@ -226,7 +238,7 @@ order.addEventListener('click', (event) => {
         .catch((error) => {
             alert("Une erreur est survenue, merci de revenir plus tard.");
         })
-    } else          alert('Attention, vous avez du commettre une erreur dans le formulaire de contact ;)')
+    } else          alert('Attention, vous avez du commettre une erreur dans le formulaire de contact !)')
 });
 
 
