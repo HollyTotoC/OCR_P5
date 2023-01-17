@@ -75,8 +75,6 @@ let supprimerArticle = (i) => {
 let recupererQuantity = (i) => {
     let Index = i.getAttribute('index');
     let nouvelleQuantity = i.value;
-    panier[Index].valeurQuantity = nouvelleQuantity;
-                                                                //console.log('%c Quantité mise a jour', 'color: lime' )
     
     //cas 0
     if (nouvelleQuantity == 0) {
@@ -84,16 +82,16 @@ let recupererQuantity = (i) => {
     } 
     else if (nouvelleQuantity < 0) {
         alert("Veuillez choisir une quantitée valide");
-        //document.querySelectorAll('input[index="'+Index+'"]').value = '"'+panier[Index].valeurQuantity+'"';
-        location.reload();
+        i.value = panier[Index].valeurQuantity;
     }
     else if (nouvelleQuantity > 100) {
         alert("Veuillez choisir une quantitée valide");
-        //document.querySelectorAll('input[index="'+Index+'"]').value = '"'+panier[Index].valeurQuantity+'"';
-        location.reload();
+        i.value = panier[Index].valeurQuantity;
     }
     //cas valeur positive
     else {
+        //console.log('%c Quantité mise a jour', 'color: lime' )
+        panier[Index].valeurQuantity = nouvelleQuantity;
         total();
         localStorage.setItem('produit', JSON.stringify(panier));
     }
@@ -231,7 +229,7 @@ order.addEventListener('click', (event) => {
         })
         .then((response) => response.json())
         .then((produit) => {
-                localStorage.clear();
+                localStorage.removeItem('produit');
                 let orderId = produit.orderId;
                 window.location.assign(`confirmation.html?orderId=${orderId}`);
         })
